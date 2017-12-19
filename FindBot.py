@@ -1,32 +1,38 @@
 __author__ = 'Administrator'
-import Data_Extraction
+from Data_Extraction import *
 import random
 import math
 
 
-def if_bot_by_hustags(hustagsid):
-    counth12 = 0
-    counth23 = 0
-    hustags1 = random.choice(hustagsid[hustags])
-    hustags2 = random.choice(hustagsid[hustags])
-    hustags3 = random.choice(hustagsid[hustags])
-    for hushtag1 in hushtags1:
-        for hushtag2 in hushtag2:
-            if hushtag1 == hushtag2:
-                count12 += 1
-    for hushtag2 in hushtags2:
-        for hushtag3 in hushtag3:
-            if hushtag2 == hushtag3:
-                count23 += 1
-    if math.abs(counth12 - counth23) < 10:
+def if_bot_by_hustags(username_id):
+    count12 = 0
+    count23 = 0
+
+    hashtag_list = get_hashtags_from_posts_by_id(username_id)
+    hushtags1 = hashtag_list[random.choice(hashtag_list.keys())]
+    hushtags2 = hashtag_list[random.choice(hashtag_list.keys())]
+    hushtags3 = hashtag_list[random.choice(hashtag_list.keys())]
+    count12 = compare_lists(hushtags1, hushtags2)
+    count23 = compare_lists(hushtags2, hushtags3)
+    if math.fabs(count12 - count23) < 10:
         return True
     return False
 
 
+def compare_lists(list1, list2):
+    counter = 0
+    for idx, item1 in enumerate(list1):
+        for item2 in list2[idx:]:
+            if item1 == item2:
+                counter += 1
+
+    return counter
+
+
 def dif_folowers_folowing(folowers, folowing):
-    if folowing / folowers < 0.23:
+    if folowing / float(folowers) < 0.23:
         return True
-    return false
+    return False
 
 
 def photo_dates(photosdates):
@@ -41,11 +47,15 @@ def photo_dates(photosdates):
     return False
 
 
-def Is_Bot():
-    if if_bot_by_hustags(Data_Extraction.get_hashtags) and dif_folowers_folowing(Data_Extraction.getfolowers, Data_Extraction.getfolowing) == True:
+def Is_Bot(username):
+    username_id = find_id_by_name(username)
+    if if_bot_by_hustags(get_hashtags_from_posts_by_id(username_id)) and dif_folowers_folowing(get_followers_number(username_id), get_following_number(username_id)) == True:
         return "hell of a bot"
-    elif if_bot_by_hustags(Data_Extraction.get_hashtags) and photo_dates(Data_Extraction.Photodates) == True:
+    elif if_bot_by_hustags(get_hashtags_from_posts_by_id()) and photo_dates(Photodates) == True:
         return "hell of a bot"
-    elif dif_folowers_folowing(Data_Extraction.getfolowers, Data_Extraction.getfolowing) and photo_dates(Data_Extraction.Photodates) == True:
-        return "hell of a bot"
+    # elif dif_folowers_folowing(getfolowers, getfolowing) and photo_dates(Photodates) == True:
+    #     return "hell of a bot"
     return "not even close"
+
+
+print Is_Bot('ruicampos_fotografia')
